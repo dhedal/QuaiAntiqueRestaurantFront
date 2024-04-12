@@ -32,7 +32,7 @@ const LoadContentPage = async () => {
         // Création d'une balise script
         let scriptTag = document.createElement("script");
         scriptTag.setAttribute("type", "text/javascript");
-        scriptTag.setAttribute("src", actualRoute.pathJS);
+        scriptTag.setAttribute("src", actualRoute.pathJs);
 
         // Ajout de la balise script au corps du document
         document.querySelector("body").appendChild(scriptTag);
