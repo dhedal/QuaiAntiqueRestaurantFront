@@ -1,4 +1,5 @@
 const tokenCookieName = "accesstoken";
+const signoutBtn = document.getElementById("signout-btn");
 
 const setToken = (token) => {
     setCookie(tokenCookieName, token, 7);
@@ -15,7 +16,7 @@ const setCookie = (name, value, days) => {
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
 };
 
 const getCookie = (name) => {
@@ -31,7 +32,12 @@ const getCookie = (name) => {
 }
 
 const eraseCookie = (name) => {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    console.log(document.cookie);
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    console.log(document);
+
+   
+    window.location.reload();
 }
 
 const isConnected = () => {
@@ -39,5 +45,11 @@ const isConnected = () => {
     return true;
 }
 
-// if(isConnected()) alert("Je suis connecté");
-// else alert ("Je ne suis pas connecté");
+const signout = () => {
+    eraseCookie(tokenCookieName);
+}
+
+signoutBtn.addEventListener("click", eraseCookie);
+
+if(isConnected()) alert("Je suis connecté");
+else alert ("Je ne suis pas connecté");
