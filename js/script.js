@@ -1,4 +1,6 @@
 const tokenCookieName = "accesstoken";
+const roleCookieName = "role";
+
 const signoutBtn = document.getElementById("signout-btn");
 
 const setToken = (token) => {
@@ -32,24 +34,54 @@ const getCookie = (name) => {
 }
 
 const eraseCookie = (name) => {
-    console.log(document.cookie);
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    console.log(document);
-
-   
     window.location.reload();
 }
 
-const isConnected = () => {
-    if(getToken() == null || getToken == undefined) return false;
-    return true;
-}
+
+const getRole = () => {
+    const role =  getCookie(roleCookieName);
+    if(role != null && role.includes("=")) return role.split("=")[1];
+};
 
 const signout = () => {
     eraseCookie(tokenCookieName);
+    eraseCookie(roleCookieName);
 }
 
 signoutBtn.addEventListener("click", eraseCookie);
 
-if(isConnected()) alert("Je suis connecté");
-else alert ("Je ne suis pas connecté");
+const isConnected = () => {
+    if(getToken() == null || getToken == undefined) return false;
+    return true;
+};
+
+/**
+ * disconnected
+ * connected
+ *     - admin
+ *     - client
+ */
+const showAndHideElementsForRoles = () => {
+    const userConnected = isConnected();
+    const role = getRole();
+    console.log("connected: ", userConnected, "role: ", role);
+
+    let allElementToEdit = document.querySelectorAll('[data-show]');
+    allElementToEdit.forEach((element) => {
+        switch(element.dataset.show) {
+            case 'disconnected' : 
+                if(userConnected) element.classList.add("d-none");
+                break;
+            case 'connected' : 
+                if(!userConnected) element.classList.add("d-none");
+                break;
+            case 'admin' :
+                if(!userConnected || role != "admin") element.classList.add("d-none"); 
+                break;
+            case 'client' : 
+                if(!userConnected || role != "client") element.classList.add("d-none"); 
+                break;
+        }
+    });
+};

@@ -13,7 +13,7 @@ const checkCredentials = () => {
         setToken(token);
         // placer ce token en cookie
 
-        // setCookie(tokenCookieName, "admin", 7);
+        setCookie(roleCookieName, "admin", 7);
         window.location.replace("/");
     }
     else {
