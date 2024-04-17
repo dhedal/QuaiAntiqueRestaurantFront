@@ -22,13 +22,13 @@ const setCookie = (name, value, days) => {
 };
 
 const getCookie = (name) => {
-    let nameEQ = name + "=";
+    const nameEQ = name + "=";
     let ca = document.cookie.split(";");
 
-    for(let i = 0; i < ca.length; i++){
-        let c = ca[i];
-        while(c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if( c.indexOf(nameEQ) == 0) return c.substring(nameEQ, c.length)
+    for(const element of ca){
+        let c = element;
+        while(c.startsWith(' ')) c = c.substring(1, c.length);
+        if( c.startsWith(nameEQ)) return c.substring(nameEQ.length, c.length)
     }
     return null;
 }
@@ -41,7 +41,7 @@ const eraseCookie = (name) => {
 
 const getRole = () => {
     const role =  getCookie(roleCookieName);
-    if(role != null && role.includes("=")) return role.split("=")[1];
+    return role?.includes("=") ? role.split("=")[1] : role;
 };
 
 const signout = () => {
@@ -52,8 +52,7 @@ const signout = () => {
 signoutBtn.addEventListener("click", eraseCookie);
 
 const isConnected = () => {
-    if(getToken() == null || getToken == undefined) return false;
-    return true;
+    return !(getToken() == null || getToken == undefined);
 };
 
 /**
