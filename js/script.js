@@ -84,3 +84,13 @@ const showAndHideElementsForRoles = () => {
         }
     });
 };
+
+/**
+ * fonction qui permet d'éviter 
+ * les failles XSS injection HTML
+ */
+const sanitizeHtml = (text) => {
+    const tempHtml = document.createElement("div");
+    tempHtml.textContent = text;
+    return tempHtml.innerHTML;
+};
