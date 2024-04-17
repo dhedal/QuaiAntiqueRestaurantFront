@@ -1,7 +1,42 @@
 const tokenCookieName = "accesstoken";
 const roleCookieName = "role";
+const apiUrl = "https://127.0.0.1:8000/api/";
 
 const signoutBtn = document.getElementById("signout-btn");
+
+
+
+/**
+ * fonction qui permet d'éviter 
+ * les failles XSS injection HTML
+ */
+const sanitizeHtml = (text) => {
+    const tempHtml = document.createElement("div");
+    tempHtml.textContent = text;
+    return tempHtml.innerHTML;
+};
+
+/**
+ * 
+ */
+const getInfosUser = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("X-AUTH-TOKEN", getToken());
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    fetch(apiUrl + "account/me", requestOptions)
+        .then(response => {
+            if(response.ok) return response.json();
+            else console.log("impossible de récupérer les infos utilisateurs");
+        })
+        .then(result => {return result;})
+        .catch(error => { console.error("erreur lors de la récupération des données utilisateurs", error);});
+
+};
 
 const setToken = (token) => {
     setCookie(tokenCookieName, token, 7);
@@ -64,7 +99,6 @@ const isConnected = () => {
 const showAndHideElementsForRoles = () => {
     const userConnected = isConnected();
     const role = getRole();
-    console.log("connected: ", userConnected, "role: ", role);
 
     let allElementToEdit = document.querySelectorAll('[data-show]');
     allElementToEdit.forEach((element) => {
@@ -83,14 +117,4 @@ const showAndHideElementsForRoles = () => {
                 break;
         }
     });
-};
-
-/**
- * fonction qui permet d'éviter 
- * les failles XSS injection HTML
- */
-const sanitizeHtml = (text) => {
-    const tempHtml = document.createElement("div");
-    tempHtml.textContent = text;
-    return tempHtml.innerHTML;
 };
